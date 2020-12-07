@@ -1,0 +1,44 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+    <div class="rectangle">
+      <div class="rectangle_img_chef">
+        <img src="chef.png" alt="" />
+      </div>
+      <div class="rectangle_title">
+        <p>As melhores receitas</p>
+      </div>
+      <div class="rectangle_info">
+        <p>
+          Aprenda a construir os melhores pratos com receitas criadas por
+          profissionais do mundo inteiro.
+        </p>
+      </div>
+    </div>
+
+    <section class="cards_recipes_home">
+      
+      {% for recipe in recipes %}
+      {% if loop.index0 <6 %}
+      <div class="card">
+        <div class="img_recipe_home">
+          <img src="{{recipe.image}}" alt="{{recipe.title}}" />
+        </div>
+        <div class="title_recipe">
+          <p>{{recipe.title}}</p>
+        </div>
+        {% for chef in chefs%}
+        {% if chef.id == recipe.chef_id%}      
+        <div class="author_recipe">
+          <p>por {{chef.name}}</p>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endfor %}
+
+    </section>
+
+{% endblock %}

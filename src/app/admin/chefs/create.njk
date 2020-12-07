@@ -1,0 +1,33 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+    <div class="comum_div">
+        <form class="form-newchef" method="post" action="/admin/chefs/chefs">
+            <div class="adm-chef">
+
+                <div style="float:left">
+                    <label >Criando Chef</label>
+                </div>
+                <div style="float:right">
+                    <button id="sav" type="submit">Salvar chef</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="">
+                    Nome
+                </label>
+                <input type="text" name="name" id="nam" >
+            </div>
+
+            <div class="field">
+                <label for="">
+                    Avatar
+                </label>
+                <input type="url" name="avatar_url" id="avat">
+            </div>
+        </form>
+    </div>
+    <script src="/scripts.js"></script>
+
+{% endblock %}

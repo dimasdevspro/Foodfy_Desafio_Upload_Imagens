@@ -1,0 +1,87 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+    <div class="comum_div">
+        <form style="position: absolute;width: 790px; "id="form-delete" method="post" action="/admin/recipes/recipes?_method=DELETE">
+            <input type="hidden" name="id" value="{{recipe.id}}">
+            <div style="margin-left: 700px;">
+                <button id="del" type="submit">Deletar</button>
+            </div>
+        </form>
+        <form class="form-newrecipe" method="post" action="/admin/recipes/recipes?_method=PUT">
+
+            <div class="adm-recipe">
+                <div style="float:left;">
+                    <label >Editando receita</label>
+                </div>
+                <div style="float:right;margin-left:10px">
+                    <button id="sav" type="submit">Salvar receita</button>
+                </div>
+            </div>
+            <div class="field">
+                <label for="">
+                    Imagem
+                </label>
+                <input type="url" name="image" id="img" placeholder="http://" value="{{recipe.image}}">
+            </div>
+
+            <div class="field">
+                <label for="">
+                    Titulo
+                </label>
+                <input type="text" name="title" id="tit" value="{{recipe.title}}">
+            </div>
+
+            <div class="field">
+                <label for="">
+                    Chef
+                    </label>
+                    <select name="chef">
+                    {% for chefs in chefOptions %}
+                    
+                    <option value="{{chefs.id}}" {% if recipe.chef_id == chefs.id %} selected {% endif %}>
+                        {{chefs.name}}
+                    
+                    </option>
+                    {% endfor %}
+                </select>
+                </div>
+
+                <div class="field" id="ingredients">
+                    <label for="ingredients">
+                        Ingredientes
+                    </label>
+                    <div class="ingredients">
+                        <input type="text" name="ingredients" id="ing" value="{{recipe.ingredients}}">
+                    </div>
+                </div>
+
+                <button type="button" class="add-ingredient">Adicionar novo ingrediente</button>
+
+                <div class="field" id="preparations">
+                    <label for="preparation">
+                        Modo de preparo
+                    </label>
+                    <div class="preparations">
+                        <input type="text" name="preparations" id="prep" value="{{recipe.preparations}}">
+                    </div>
+                </div>
+
+                <button type="button" class="add-preparation">Adicionar novo passo</button>
+
+                <div class="field">
+                    <label for="add-info">
+                        Informações adicionais
+                    </label>
+                    <textarea type="text" name="informations" id="info">{{recipe.informations}}</textarea>
+                </div>
+
+            </div>
+            <input type="hidden" name="id" value="{{recipe.id}}">
+        </form>
+
+        <script src="/scripts.js"></script>
+
+    </div>
+
+{% endblock %}

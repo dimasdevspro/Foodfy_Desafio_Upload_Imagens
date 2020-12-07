@@ -1,0 +1,42 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+    <div class="comum_div">
+        <form style="position: absolute;width: 790px; "id="form-delete" method="post" action="/admin/chefs/chefs?_method=DELETE">
+            <input type="hidden" name="id" value="{{chef.id}}">
+            <div style="margin-left: 700px;">
+                <button id="del" type="submit">Deletar</button>
+            </div>
+        </form>
+        <form class="form-newchef" method="post" action="/admin/chefs/chefs?_method=PUT">
+            <div class="adm-chef">
+
+                <div style="float:left">
+                    <label >Editando Chef</label>
+                </div>
+                <div style="float:right">
+                    <button id="sav" type="submit">Salvar chef</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="">
+                    Nome
+                </label>
+                <input type="text" name="name" id="nam" value="{{chef.name}}" >
+            </div>
+
+            <div class="field">
+                <label for="">
+                    Avatar
+                </label>
+                <input type="url" name="avatar_url" id="avat" value="{{chef.avatar_url}}">
+            </div>
+            <input type="hidden" name="id" value="{{chef.id}}">
+        </form>
+
+        <script src="/scripts.js"></script>
+
+    </div>
+
+{% endblock %}
