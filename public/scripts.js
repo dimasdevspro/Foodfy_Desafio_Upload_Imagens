@@ -159,9 +159,9 @@ const PhotosUpload = {
 
       reader.onload = () => {
         const image = new Image()
-        image.src = String(reader.results)
+        image.src = String(reader.result)
 
-        const container = document.createElement('div')
+        const div = document.createElement('div')
         div.classList.add('photo')
 
         div.onclick = () => alert('remover foto')

@@ -181,10 +181,10 @@ body {
 
 .container_cards_chefs {
   position: relative;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    margin: 30px 230px;
-    gap: 61px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 30px 230px;
+  gap: 61px;
 }
 
 .cards_chefs img {
@@ -195,7 +195,7 @@ body {
 }
 .chef {
   display: grid;
-    grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 .chef_info {
@@ -405,7 +405,8 @@ h4 {
   margin: 55px 0px 0px 230px;
 }
 
-#button-create, #button-filter {
+#button-create,
+#button-filter {
   text-decoration: none;
   width: 100px;
   height: 40px;
@@ -420,7 +421,7 @@ h4 {
   align-items: center;
   position: relative;
   background-color: #6558c3;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 form {
@@ -540,13 +541,11 @@ form {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, 320px);
-
 }
 .card_chef {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, 320px);
-
 }
 
 .img_chef_id {
@@ -570,7 +569,7 @@ select {
   outline: none;
   color: #111111;
   font-size: 20px;
-  line-height:21px
+  line-height: 21px;
 }
 
 /* FILTER */
@@ -589,12 +588,12 @@ select {
 
 .header form input {
   border: 1px solid #eee;
-    padding: 4px 8px;
-    outline: none;
-    box-sizing: border-box;
-    width: 50%;
-    height: 40px;
-    margin: 10px;
+  padding: 4px 8px;
+  outline: none;
+  box-sizing: border-box;
+  width: 50%;
+  height: 40px;
+  margin: 10px;
 }
 
 .pagination {
@@ -602,20 +601,33 @@ select {
 }
 
 .pagination a {
-    text-decoration: none;
-    margin: 10px;
-    border-radius: 5px;
-    font-size: 20px;
-    color: #111111;
+  text-decoration: none;
+  margin: 10px;
+  border-radius: 5px;
+  font-size: 20px;
+  color: #111111;
 }
 
 /* UPLOAD FOTOS */
 
-form .field #photos-upload{
-  position: relative ;
+form .field.upload {
+  position: relative;
+  display: flex;
+  height: 180px;
+}
+
+form .field.upload .upload {
+  display: block;
+}
+
+form .field.upload .upload label {
+  margin: 0px 0px 10.5px;
+}
+
+form .field.upload #photos-upload {
+  position: relative;
   display: block;
   overflow: hidden;
-
   width: 149px;
   height: 149px;
   border: 1px solid #dddddd;
@@ -623,7 +635,7 @@ form .field #photos-upload{
   background-color: #ffffff;
 }
 
-form .field #photos-input {
+form .field.upload #photos-input {
   position: absolute;
   top: 0;
   left: 0;
@@ -634,4 +646,27 @@ form .field #photos-input {
   height: 100%;
   opacity: 0;
   cursor: pointer;
+}
+
+form .field.upload #photos-preview {
+  position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10.5px;
+    width: 100%;
+    height: 150px;
+    box-sizing: border-box;
+    margin: 31px 0px 0px 10.5px;
+   
+}
+
+form .field.upload #photos-preview .photo {
+  box-sizing: border-box;
+}
+
+form .field.upload #photos-preview .photo img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+
 }
