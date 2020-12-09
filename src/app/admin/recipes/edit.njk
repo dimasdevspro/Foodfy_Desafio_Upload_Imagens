@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="comum_div">
-        <form style="position: absolute;width: 790px; "id="form-delete" method="post" action="/admin/recipes/recipes?_method=DELETE">
+        <form style="position: absolute;width: 790px; "id="form-delete" method="post" action="/admin/recipes/recipes?_method=DELETE" enctype="multipart/form-data">
             <input type="hidden" name="id" value="{{recipe.id}}">
             <div style="margin-left: 700px;">
                 <button id="del" type="submit">Deletar</button>

@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="comum_div">
-        <form class="form-newrecipe" method="post" action="/admin/recipes/recipes">
+        <form class="form-newrecipe" method="post" action="/admin/recipes/recipes" enctype="multipart/form-data">
             <div class="adm-recipe">
 
                 <div style="float:left">
@@ -25,7 +25,7 @@
                         <input id="photos-input" type="file" name="photos" multiple="multiple" accept="image/*" onchange="PhotosUpload.handleFileInput(event)">
                         <div class="photo">
                             <img src="" alt="">
-                            <i class="material-icons">Add</i>
+                            <i class="material-icons">add</i>
                         </div>
 
                     </div>
@@ -33,7 +33,7 @@
                 <div id="photos-preview">
                     <div class="photo">
                         <img src="" alt="">
-                        <i class="material-icons">Close</i>
+                        <i class="material-icons">close</i>
                     </div>
                 </div>
             </div>
