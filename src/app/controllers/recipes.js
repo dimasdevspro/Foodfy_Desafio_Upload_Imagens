@@ -87,6 +87,7 @@ module.exports = {
       )}`,
     }));
     return res.render("recipes/show", { recipe, files });
+    // console.log({recipe, files})
   },
   async edit(req, res) {
     try {

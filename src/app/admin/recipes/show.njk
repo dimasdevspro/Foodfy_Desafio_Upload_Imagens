@@ -14,7 +14,13 @@
     </div>
 
     <div class="img_recipe_id">
-      <img src="{{recipe.image}}" alt=""/>
+     
+      {% if not files[0] %}
+      <img src="http://placehold.it/500x500?text=PRODUTO SEM FOTO" alt=""/>
+      {% else %}
+      <img src="{{files[0].src}}" alt="{{files[0].name}}">
+      {% endif %}
+      
     </div>
 
     <div class="title_recipe_id">

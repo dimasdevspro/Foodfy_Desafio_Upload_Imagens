@@ -7,7 +7,7 @@ module.exports = {
         const query = `
         INSERT INTO files (
             name,
-            path,
+            path
         ) VALUES ( $1, $2 )
         RETURNING id
         `

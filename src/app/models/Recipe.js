@@ -119,7 +119,7 @@ module.exports = {
     files(id){
         return db.query(`
         
-        SELECT * FROM recipes_files WHERE recipes_id = $1
+        SELECT * FROM files WHERE id = $1
         `, [id])
     }
 }
