@@ -93,14 +93,18 @@ module.exports = {
 
     let results = await Recipe.create(req.body);
     const recipeId = results.rows[0].id;
-
+    
+    // results = await File.create(req.body)
+    // const fileId = results.rows[0].id;
+    
     const filesPromise = req.files.map((file) =>
-      File.create({ ...file, recipes_id: recipeId })
+      File.create({ ...file, recipes_id: recipeId})
+      // File.create2({...file, files_id: fileId})
     );
     await Promise.all(filesPromise);
 
     return res.redirect(`/admin/recipes/recipes/${recipeId}/edit`);
-    // console.log(req.body)
+    // console.log(recipeId)
   },
   async show(req, res) {
     let results = await Recipe.find(req.params.id);
@@ -185,6 +189,7 @@ module.exports = {
   async delete(req, res) {
     await Recipe.delete(req.body.id);
 
-    return res.redirect(`/admin/recipes/recipes`);
+    // return res.redirect(`/admin/recipes/recipes`);
+    console.log(req.body.id)
   },
 };

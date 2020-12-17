@@ -17,6 +17,21 @@ module.exports = {
         ]
         return db.query(query, values)
     },
+    create2({recipes_id, files_id}) {
+
+        const query = `
+        INSERT INTO recipes_files (
+            recipes_id,
+            files_id
+        ) VALUES ( $1, $2 )
+        RETURNING id
+        `
+        const values = [
+            recipes_id,
+            files_id
+        ]
+        return db.query(query, values)
+    },
     async delete(id) {
 
         try{

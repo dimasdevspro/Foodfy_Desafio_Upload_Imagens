@@ -24,7 +24,7 @@ module.exports = {
             informations,
             created_at,
             chef_id
-        ) VALUES ( $1, $2, $3, $4, $5, $6)
+        ) VALUES ( $1, ARRAY[$2], ARRAY[$3], $4, $5, $6)
         RETURNING id
     `
     const values = [
@@ -36,6 +36,7 @@ module.exports = {
         data.chef,
     ]
     return db.query(query, values)
+    // console.log(query, values)
     },
     find(id) {
         return db.query(`
