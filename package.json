@@ -7,7 +7,7 @@
     "debug":"nodemon --inspect=0.0.0.0:9229 src/server.js",
     "start": "npm-run-all -p nodemon browser-sync",
     "nodemon": "nodemon src/server.js",
-    "browser-sync": "browser-sync start --proxy http://localhost:3333 --files 'public, src/app, src/config, src/lib'"
+    "browser-sync": "browser-sync start --proxy http://localhost:3334 --files 'public, src/app, src/config, src/lib'"
   },
   "keywords": [],
   "author": "",

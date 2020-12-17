@@ -2,14 +2,10 @@ const db = require('../../config/db')
 const { date } = require('../../lib/utils')
 
 module.exports = {
-    all(callback) {
-        db.query(`SELECT * 
+    all() {
+       return db.query(`SELECT * 
         FROM recipes
-        ORDER BY title ASC`, function(err, results){
-            if(err)  throw `Database Error! ${err}`
-            
-            callback(results.rows)
-        })
+        ORDER BY title ASC`)
 
     },
     create(data) {
@@ -52,8 +48,8 @@ module.exports = {
         const query = `
         UPDATE recipes SET
         title=($1),
-        ingredients=ARRAY[$2],
-        preparations=ARRAY[$3],
+        ingredients=($2),
+        preparations=($3),
         informations=($4),
         chef_id=($5)
         WHERE id= $6
@@ -79,7 +75,7 @@ module.exports = {
          )
     },
     paginate(params) {
-        const { filter, limit, offset, callback } = params
+        const { filter, limit, offset } = params
 
         let query = "",
         filterQuery = "",
@@ -110,16 +106,18 @@ module.exports = {
         LIMIT $1 OFFSET $2
         `
 
-        db.query(query, [limit, offset], function(err, results){
-            if (err) throw `Database Error! ${err}` 
-            callback(results.rows)
-            // console.log(results.rows)
-        })
+        return db.query(query, [limit, offset])
+    
     },
     files(id){
         return db.query(`
-        
         SELECT * FROM files WHERE id = $1
         `, [id])
+    },
+    filesAll(){
+        return db.query(`
+        SELECT * FROM files 
+        ORDER BY id ASC
+        `)
     }
 }

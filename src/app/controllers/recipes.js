@@ -1,43 +1,73 @@
-const { date } = require("../../lib/utils");
-
 const Recipe = require("../models/Recipe");
 const Chef = require("../models/Chef");
 const File = require("../models/File");
 
 module.exports = {
-  home(req, res) {
-    Recipe.all(function (recipes) {
-      Chef.all(function (chefs) {
-        return res.render("home", { chefs, recipes });
-      });
-    });
+  async home(req, res) {
+    let results1 = await Recipe.all();
+      const recipes = results1.rows;
+
+    let results2 = await Recipe.filesAll();
+    const files = results2.rows.map((file) => ({
+      ...file,
+      src: `${req.protocol}://${req.headers.host}${file.path.replace(
+        "public",
+        ""
+      )}`,
+    }));
+    
+    let results3 = await Chef.all()
+    const chefs = results3.rows
+
+    // return res.render("home", { recipes, files, chefs })
+    console.log({recipes, files})
   },
   about(req, res) {
     return res.render("about");
   },
-  index(req, res) {
-    let { filter, page, limit } = req.query;
+  async index(req, res) { 
+    try {
+      let { filter, page, limit } = req.query;
 
-    page = page || 1;
-    limit = limit || 6;
-    let offset = limit * (page - 1);
+      page = page || 1;
+      limit = limit || 6;
+      let offset = limit * (page - 1);
 
-    const params = {
-      filter,
-      page,
-      limit,
-      offset,
-      callback(recipes) {
-        const pagination = {
-          total: Math.ceil(recipes[0].total / limit),
-          page,
-        };
-        return res.render("recipes/recipes", { recipes, pagination, filter });
-        // console.log(recipes, pagination, filter)
-      },
-    };
-    Recipe.paginate(params);
-  },
+      let results = await Recipe.all();
+      const recipes = results.rows;
+
+    results = await Recipe.files(recipes);
+    const files = results.rows.map((file) => ({
+      ...file,
+      src: `${req.protocol}://${req.headers.host}${file.path.replace(
+        "public",
+        ""
+      )}`,
+    }));
+
+      const params = {
+        filter,
+        page,
+        limit,
+        offset,
+        callback(recipes) {
+          const pagination = {
+            total: Math.ceil(recipes[0].total / limit),
+            page,
+          };
+            // return res.render("recipes/recipes", { recipes, pagination, filter, files });
+            console.log(recipes, pagination, filter, files)
+        
+        }
+      }
+        
+      Recipe.paginate(params);
+    }catch(error){
+       throw new Error(error)
+    }
+    
+
+},
   create(req, res) {
     Recipe.chefsSelectOptions()
       .then(function (results) {

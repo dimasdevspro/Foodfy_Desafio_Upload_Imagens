@@ -3,16 +3,12 @@ const { date } = require('../../lib/utils')
 
 module.exports = {
     all(callback) {
-        db.query(`
+      return db.query(`
         SELECT chefs.*, count(recipes) AS total_recipes
         FROM chefs
         LEFT JOIN recipes ON (recipes.chef_id = chefs.id)
         GROUP BY chefs.id
-        ORDER BY total_recipes ASC`, function(err, results){
-            if(err)  throw `Database Error! ${err}`
-            
-            callback(results.rows)
-        })
+        ORDER BY total_recipes ASC`)
     },
     create(data, callback) {
 

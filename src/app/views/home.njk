@@ -22,9 +22,11 @@
       {% for recipe in recipes %}
       {% if loop.index0 <6 %}
       <div class="card">
+        {% for image in files %}
         <div class="img_recipe_home">
-          <img src="{{recipe.image}}" alt="{{recipe.title}}" />
+          <img src="{{image.src}}" alt="{{image.name}}" />
         </div>
+        {% endfor %}
         <div class="title_recipe">
           <p>{{recipe.title}}</p>
         </div>
