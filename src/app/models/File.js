@@ -14,23 +14,16 @@ module.exports = {
         const values = [
             filename,
             path
-        ]
+                ]
         return db.query(query, values)
+        // console.log(query, values)
     },
-    create2({recipes_id, files_id}) {
-
-        const query = `
-        INSERT INTO recipes_files (
-            recipes_id,
-            files_id
-        ) VALUES ( $1, $2 )
-        RETURNING id
-        `
-        const values = [
-            recipes_id,
-            files_id
-        ]
-        return db.query(query, values)
+    find(id) {
+        try {
+            return db.query(`SELECT * FROM files WHERE id = $1`, [id])
+        }catch(err){
+            throw new Error(err);
+        }
     },
     async delete(id) {
 

@@ -15,10 +15,10 @@
 
     <div class="img_recipe_id">
      
-      {% if not files[0] %}
+      {% if not recipeFiles[0] %}
       <img src="http://placehold.it/500x500?text=PRODUTO SEM FOTO" alt=""/>
       {% else %}
-      <img src="{{files[0].src}}" alt="{{files[0].name}}">
+      <img src="{{recipeFiles[0].src}}" alt="{{recipeFiles[0].name}}">
       {% endif %}
       
     </div>

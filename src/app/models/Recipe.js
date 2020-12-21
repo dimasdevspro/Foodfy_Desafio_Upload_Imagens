@@ -29,8 +29,8 @@ module.exports = {
     `
     const values = [
         data.title,
-        data.ingredients,
-        data.preparations,
+        `{${data.ingredients}}`,
+        `{${data.preparations}}`,
         data.informations,
         date(Date.now()).iso,
         data.chef,
@@ -49,8 +49,8 @@ module.exports = {
         const query = `
         UPDATE recipes SET
         title=($1),
-        ingredients=($2),
-        preparations=($3),
+        ingredients=$2,
+        preparations=$3,
         informations=($4),
         chef_id=($5)
         WHERE id= $6
@@ -58,8 +58,8 @@ module.exports = {
 
         const values = [
             data.title,
-            data.ingredients,
-            data.preparations,
+        `{${data.ingredients}}`,
+        `{${data.preparations}}`,
             data.informations,
             data.chef,
             data.id
@@ -107,8 +107,8 @@ module.exports = {
         LIMIT $1 OFFSET $2
         `
 
-        return db.query(query, [limit, offset])
-    
+        // return db.query(query, [limit, offset])
+        console.log(db.query(query, [limit, offset]))
     },
     files(id){
         return db.query(`
