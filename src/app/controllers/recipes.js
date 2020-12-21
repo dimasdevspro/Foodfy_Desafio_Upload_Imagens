@@ -34,7 +34,7 @@ module.exports = {
     const filesPromise = await results1.rows.map(recipe => getImage(recipe.id));
     const recipeFiles = await Promise.all(filesPromise);
     return res.render("home", { recipes, recipeFiles, chefs })
-    // console.log({recipes, recipeFiles, chefs})
+    console.log({recipes, recipeFiles, chefs})
     }catch (err){
       throw new Error(err);
     }
@@ -81,8 +81,8 @@ module.exports = {
             total: Math.ceil(recipes[0].total / limit),
             page,
           };
-            // return res.render("recipes/recipes", { recipeFiles, recipes, pagination, filter });
-            console.log(recipes, pagination, filter, recipeFiles)
+            return res.render("recipes/recipes", { recipeFiles, recipes, pagination, filter });
+            // console.log(recipes, pagination, filter, recipeFiles)
         
         }
       }
@@ -152,10 +152,10 @@ module.exports = {
     let recipeFiles = results.map(result => result.rows[0]);
     recipeFiles = recipeFiles.map(file => ({
       ...file,
-      src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`
+      src: `${req.protocol}://${req.headers.host}${file[0].path.replace('public', '')}`
     }));
-    // return res.render("recipes/show", { recipe, recipeFiles });
-    console.log({recipe, recipeFiles})
+    return res.render("recipes/show", { recipe, recipeFiles });
+    // console.log({recipe, recipeFiles})
   },
   async edit(req, res) {
     try {
@@ -231,10 +231,17 @@ module.exports = {
         const recipeFilesPromise = recipeFiles.map((file) => Recipe.create(file.id, recipeId))
         await Promise.all(recipeFilesPromise)
       }
-      await Recipe.update(req.body)
+     
+      // [req.body estava retornando - [Object: null prototype] ], para fixar:
+
+      const reqBodyFormatted = JSON.parse(JSON.stringify(req.body)) 
+      await Recipe.update(reqBodyFormatted)
 
       return res.redirect(`/admin/recipes/recipes/${recipeId}`)
-      // console.log(req.body);
+     
+      // console.log(reqBodyFormatted)
+      // console.log(req.files);
+      // console.log(req.body)
     } catch (error) {
       throw new Error(error)
     }
