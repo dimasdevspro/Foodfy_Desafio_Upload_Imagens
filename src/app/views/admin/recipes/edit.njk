@@ -3,13 +3,16 @@
 {% block content %}
     <div class="comum_div">
 
-        <form style="position: absolute;width: 790px; " id="form-delete" method="post" action="/admin/recipes/recipes?_method=DELETE" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="{{recipe.id}}">
+        <form style="position: absolute;width: 790px; " id="form-delete" method="post" action="/recipes?_method=DELETE">
             <div style="margin-left: 700px;">
                 <button id="del" type="submit">Deletar</button>
+                <input type="hidden" name="recipe_id" value="{{recipe.id}}">
+                <input type="hidden" name="files_id" value="{{dataFile.file_id}}">
+                <input type="hidden" name="recipes_files_id" value="{{dataFile.recipes_files_id}}">
             </div>
+            
         </form>
-        <form class="form-newrecipe" method="post" action="/admin/recipes/recipes?_method=PUT" enctype="multipart/form-data">
+        <form class="form-newrecipe" method="post" action="/recipes?_method=PUT" enctype="multipart/form-data">
             <div class="adm-recipe">
                 <div style="float:left;">
                     <label >Editando receita</label>
@@ -18,13 +21,10 @@
                     <button id="sav" type="submit">Salvar receita</button>
                 </div>
             </div>
-            {% include "recipes/fields.njk" %}
+            {% include "admin/recipes/fields.njk" %}
             <input type="hidden" name="id" value="{{recipe.id}}">
 
         </form>
-
-        <script src="/scripts.js"></script>
-
     </div>
-
+ <script src="/script_edit.js"></script>
 {% endblock %}

@@ -1,255 +1,274 @@
 const Recipe = require("../models/Recipe");
 const Chef = require("../models/Chef");
 const File = require("../models/File");
-const RecipeFile = require('../models/RecipeFile');
+const RecipeFile = require("../models/RecipeFile");
 
 module.exports = {
   async home(req, res) {
-    try {
-      let results1 = await Recipe.all();
-      const recipes = results1.rows;
+    // buscando todos os dados concatenados das receitas
+    let results = await Recipe.all();
 
-    // let results2 = await Recipe.filesAll();
-    // const files = results2.rows.map((file) => ({
-    //   ...file,
-    //   src: `${req.protocol}://${req.headers.host}${file.path.replace(
-    //     "public",
-    //     ""
-    //   )}`,
-    // }));
-    async function getImage(recipeId){
-      const results2 = await RecipeFile.find(recipeId);
-      const files = results2.rows.map(file => ({
-        ...file,
-        src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`
-      }));
+    // criando espaço para gravar os dados do Array
+    let arrayRecipes = [];
 
-      return files[0]
-    }
+    // criando um colocador de objetos em um Array e renderizando a página com o objeto
 
-    let results3 = await Chef.all()
-    const chefs = results3.rows
-
-    
-    const filesPromise = await results1.rows.map(recipe => getImage(recipe.id));
-    const recipeFiles = await Promise.all(filesPromise);
-    return res.render("home", { recipes, recipeFiles, chefs })
-    console.log({recipes, recipeFiles, chefs})
-    }catch (err){
-      throw new Error(err);
-    }
-    
+    const dataRecipe = {
+      creatorData: function (data) {
+        let dataRecipes = {};
+        for (i = 0; data.length > i; i++) {
+          dataRecipes = {
+            filename: data[i].filename,
+            src: `${req.protocol}://${req.headers.host}${data[i].path.replace(
+              "public",
+              ""
+            )}`,
+            title: data[i].title,
+            author: data[i].name,
+          };
+          arrayRecipes.push(dataRecipes);
+        }
+        res.render("home", { arrayRecipes });
+      },
+    };
+    dataRecipe.creatorData(results.rows);
   },
   about(req, res) {
     return res.render("about");
   },
-  async index(req, res) { 
-    try {
-      let { filter, page, limit } = req.query;
-
-      page = page || 1;
-      limit = limit || 6;
-      let offset = limit * (page - 1);
-
-      let results = await Recipe.all();
-      const recipes = results.rows;
-
-      async function getImage(recipeId){
-        const results2 = await RecipeFile.find(recipeId);
-        const files = results2.rows.map(file => ({
-          ...file,
-          src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`
-        }));
-  
-        return files[0]
-      }
-  
-      const filesPromise = await results.rows.map(recipe => getImage(recipe.id));
-      const recipeFiles = await Promise.all(filesPromise);
-
-      // (err, results) => {
-      //   if (err) throw `Database Error! ${err}` 
-      //   callback(results.rows)}
-
-      const params = {
-        filter,
-        page,
-        limit,
-        offset,
-        callback(recipes) {
-          const pagination = {
-            total: Math.ceil(recipes[0].total / limit),
-            page,
-          };
-            return res.render("recipes/recipes", { recipeFiles, recipes, pagination, filter });
-            // console.log(recipes, pagination, filter, recipeFiles)
-        
-        }
-      }
-        
-      Recipe.paginate(params);
-    }catch(error){
-       throw new Error(error)
-    }
+  async index(req, res) {
+    // //  buscando todos os dados concatenados das receitas
+    // let results = await Recipe.all();
+    // // criando espaço para gravar os dados em um Array
+    // let arrayRecipes = [];
+    // //Definindo parâmetros para paginação
     
-},
+    // // criando o colocador de objetos em um Array e renderizando a página com o objeto
+    // let dataRecipes = {
+    //   creatorData: function (data) {
+    //     let arrayDataRecipes = {};
+    //     for (i = 0; data.length > i; i++) {
+    //       arrayDataRecipes = {
+    //         id: data[i].recipes_id,
+    //         filename: data[i].filename,
+    //         src: `${req.protocol}://${req.headers.host}${data[i].path.replace(
+    //           "public",
+    //           ""
+    //         )}`,
+    //         title: data[i].title,
+    //         author: data[i].name,
+    //       };
+
+    //       arrayRecipes.push(arrayDataRecipes);
+    //     }
+    //     res.render('admin/recipes/index',{arrayRecipes} )
+    //   }
+    // }
+    // // o que vai dentro da matriz "arrayRecipes"? O resultado da busca de receitas por linha
+
+    // dataRecipes.creatorData(results.rows);
+    
+    let { filter, page, limit } = req.query
+
+    page = page || 1
+    limit = limit || 6
+    let offset = limit * (page - 1)
+    filter = ''
+
+
+    const params = {
+      filter,
+      page,
+      limit, 
+      offset,
+      callback: function(recipes) {
+
+        const pagination = {
+          total: Math.ceil(recipes[0].total / limit),
+          page,
+        }
+          for (i = 0; recipes.length > i; i++) {
+            recipes[i].path = `${req.protocol}://${req.headers.host}${recipes[i].path.replace("public", "")}`
+          }
+          console.log(recipes)
+        // return res.render("admin/chefs/index", { recipes, pagination, filter})
+        }  
+      }
+    await Recipe.paginate(params)
+  
+  },
   create(req, res) {
     Recipe.chefsSelectOptions()
       .then(function (results) {
         const chefOptions = results.rows;
-        return res.render("recipes/create", { chefOptions });
+        return res.render("admin/recipes/create", { chefOptions });
       })
       .catch(function (err) {
         throw new Error(err);
       });
   },
   async post(req, res) {
-    try {
-      const keys = Object.keys(req.body);
+    //validando se todos os campos estão preenchidos
+    const keys = Object.keys(req.body);
 
-      for (key of keys) {
-        if (req.body[key] == "") {
-          return res.send("Please, fill all fields!");
-        }
+    for (key of keys) {
+      if (req.body[key] == "") {
+        res.send("Please, fill all fields!");
       }
-  
-      if (req.files.length == 0) {
-        return res.send("Please, send at least one image");
-      }
-  
-      let results = await Recipe.create(req.body);
-      const recipeId = results.rows[0].id;
-      
-      // results = await File.create(req.body)
-      // const fileId = results.rows[0].id;
-      
-      const filesPromise = req.files.map((file) => File.create({ ...file}),
-        // File.create2({...file, files_id: fileId, recipes_id: recipeId})
-      );
-      results = await Promise.all(filesPromise);
-  
-      const recipeFiles = results.map(result => result.rows[0])
-      const recipeFilesPromise = recipeFiles.map(file => RecipeFile.create(file.id, recipeId));
-      results = await Promise.all(recipeFilesPromise);
-  
-      return res.redirect(`/admin/recipes/recipes/${recipeId}/edit`);
-      // console.log(recipeId)
-    } catch(err){
-      throw new Error(err);
     }
+
+    //validando se ao menos uma imagem será enviada
+    if (req.files.length == 0) res.send("Please, send at least one image");
+
+    //gravando os dados no db, na tabela recipes e alocando id
+
+    let results = await Recipe.create(req.body);
+    const recipeId = results.rows[0].id;
+
+    // //gravando os dados no db, na tabela - files, e alocando id
+
+    results = await File.create(req.files[0]);
+    const fileId = results.rows[0].id;
+
+    //extraindo id's para acessibilidade do controlador RecipeFile
+
+    const reqIdsRecipeFile = {
+      body: {
+        recipes_id: Number(recipeId),
+        files_id: Number(fileId),
+      },
+    };
+    //gravando os id's no db, tabela - recipes_files
+
+    results = await RecipeFile.create(reqIdsRecipeFile.body);
+
+    //redirecionando para a página da receita
+    return res.redirect(`recipes/${recipeId}`);
+
+    
   },
   async show(req, res) {
-    const recipeId = req.params.id
+    //buscando as informações de receitas e chefs
     let results = await Recipe.find(req.params.id);
     const recipe = results.rows[0];
 
-    if (!recipe) return res.send("Recipes not found!");
+    // validando informação
+    if (!recipe) return res.send("Recipe Not Found!");
 
-    results = await RecipeFile.findByRecipeId(recipeId);
-    const recipeFilesPromise = results.rows.map(file => File.find(file.file_id));
-    results = await Promise.all(recipeFilesPromise);
+    //buscando as informações das imagens
+    results = await File.find(recipe.id);
 
-    let recipeFiles = results.map(result => result.rows[0]);
-    recipeFiles = recipeFiles.map(file => ({
-      ...file,
-      src: `${req.protocol}://${req.headers.host}${file[0].path.replace('public', '')}`
-    }));
-    return res.render("recipes/show", { recipe, recipeFiles });
-    // console.log({recipe, recipeFiles})
+    //validando se há imagens em arquivo
+    if (results.rows) {
+      const dataFile = results.rows.map((file) => ({
+        ...file,
+        src: `${req.protocol}://${req.headers.host}${file.path.replace(
+          "public",
+          ""
+        )}`,
+      }));
+
+      return res.render("admin/recipes/show", { recipe, dataFile });
+    } else {
+      const dataFile = {};
+
+      return res.render("admin/recipes/show", { recipe, dataFile });
+    }
   },
   async edit(req, res) {
-    try {
-      const recipeId = req.params.id;
+    //buscando as informações concatenadas de receitas e chefs
+    let results = await Recipe.find(req.params.id);
+    const recipe = results.rows[0];
 
-      let results = await Recipe.find(recipeId);
-      const recipe = results.rows[0];
+    // validando se há receitas
+    if (!recipe) res.send("Recipes not found!");
 
-      if (!recipe) return res.send("Recipes not found!");
+    //buscando lista de chefs para concatenar com chef do recipe em edição
+    results = await Recipe.chefsSelectOptions();
+    const chefOptions = results.rows;
 
-      results = await Recipe.chefsSelectOptions();
-      const chefOptions = results.rows;
+    //buscando os dados da imagens
+    results = await File.find(recipe.id);
 
-      // results = await Recipe.files(recipe.id);
-      // let files = results.rows;
-      // files = files.map((file) => ({
-      //   ...file,
-      //   src: `${req.protocol}://${req.headers.host}${file.path.replace(
-      //     "public",
-      //     ""
-      //   )}`,
-      // }));
-
-      async function getImage(recipeId){
-        const results = await RecipeFile.find(recipeId);
-        const files = results.rows.map(file => ({
-          ...file,
-          src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`
-        }));
-  
-        return files
-      }
-  
-      const filesPromise = await getImage(recipeId);
-      const recipeFiles = await Promise.all(filesPromise);
-
-      return res.render("recipes/edit", {
+    //validando se há imagens em arquivo
+    if (results.rows[0]) {
+      const dataFile = results.rows.map((files) => ({
+        ...files,
+        src: `${req.protocol}://${req.headers.host}${files.path.replace(
+          "public",
+          ""
+        )}`,
+      }));
+      console.log(dataFile);
+      //renderizando a página e enviando os objetos para edição
+      return res.render(`admin/recipes/edit`, {
         recipe,
+        dataFile,
         chefOptions,
-        recipeFiles,
       });
-      // console.log({recipe, chefOptions, recipeFiles})
-    } catch (error) {
-      throw new Error(error);
+    } else {
+      const dataFile = {};
+      //renderizando a página e enviando os objetos para edição
+      return res.render(`admin/recipes/edit`, {
+        recipe,
+        dataFile,
+        chefOptions,
+      });
     }
   },
   async put(req, res) {
-    try {
-      const keys = Object.keys(req.body)
-      const recipeId = req.body.id
+    // validando se todos os campos foram preenchidos
 
-      for (key of keys) {
-        if (req.body[key] == "" && key != "removed_files") {
-          return res.send("Please, fill all fields!")
-        }
+    const keys = Object.keys(req.body);
+    for (key of keys) {
+      if (req.body[key] == "" && key != "removed_files") {
+        return res.send("Please, fill all fields and send at least one image!");
       }
-
-      if (req.body.removed_files) {
-        const removedFiles = req.body.removed_files.split(",")
-        const lastIndex = removedFiles.length - 1
-        removedFiles.splice(lastIndex, 1)
-
-        const removedFilesPromise = removedFiles.map(id => File.delete(id))
-
-        await Promise.all(removedFilesPromise)
-      }
-
-      if(req.files.length != 0) {
-        const newFilesPromise = req.files.map(file => File.create({...file}))
-        const result = await Promise.all(newFilesPromise);
-
-        const recipeFiles = result.map(result => result.rows[0]);
-        const recipeFilesPromise = recipeFiles.map((file) => Recipe.create(file.id, recipeId))
-        await Promise.all(recipeFilesPromise)
-      }
-     
-      // [req.body estava retornando - [Object: null prototype] ], para fixar:
-
-      const reqBodyFormatted = JSON.parse(JSON.stringify(req.body)) 
-      await Recipe.update(reqBodyFormatted)
-
-      return res.redirect(`/admin/recipes/recipes/${recipeId}`)
-     
-      // console.log(reqBodyFormatted)
-      // console.log(req.files);
-      // console.log(req.body)
-    } catch (error) {
-      throw new Error(error)
     }
+
+    // se remover imagens, registrar remoção e deletar arquivo do public/images
+    if (req.body.removed_files) {
+      const removedFiles = req.body.removed_files[0].split(",");
+      const lastIndexFiles = removedFiles.length - 1;
+      removedFiles.splice(lastIndexFiles, 1);
+
+      await RecipeFile.delete(removedFiles[0]);
+      await File.delete(removedFiles[0]);
+    }
+
+    // se adicionar mais imagens, registrar os arquivos
+    if (req.files.length != 0) {
+      const recipeId = req.body.id;
+
+      let results = await File.create(req.files[0]);
+      const fileId = results.rows[0];
+
+      const reqIdsRecipeFile = {
+        body: {
+          recipes_id: recipeId,
+          files_id: fileId.id,
+        },
+      };
+
+      await RecipeFile.create(reqIdsRecipeFile.body);
+    }
+
+    // atualizando o bd dos recipes
+
+    await Recipe.update(req.body);
+
+    // redirecionando para show, para verificar mudanças
+    const recipeUpdatedId = req.body.id;
+
+    return res.redirect(`/recipes/${recipeUpdatedId}`);
   },
   async delete(req, res) {
-    await Recipe.delete(req.body.id);
+    const recipeId = req.body;
 
-    // return res.redirect(`/admin/recipes/recipes`);
-    console.log(req.body.id)
+    await RecipeFile.delete(recipeId.files_id);
+    await File.delete(recipeId.files_id);
+    await Recipe.delete(recipeId.recipe_id);
+
+    res.redirect(`/recipes/${recipeId.recipe_id - 1}`);
   },
 };

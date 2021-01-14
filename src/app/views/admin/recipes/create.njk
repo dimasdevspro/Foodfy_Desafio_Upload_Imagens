@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="comum_div">
-        <form class="form-newrecipe" method="post" action="/admin/recipes/recipes" enctype="multipart/form-data">
+        <form class="form-newrecipe" onsubmit="notice(event)" method="post" action="/recipes" enctype="multipart/form-data">
             <div class="adm-recipe">
 
                 <div style="float:left">
@@ -14,9 +14,8 @@
                 </div>
             </div>
 
-            {% include "recipes/fields.njk" %}
+            {% include "admin/recipes/fields.njk" %}
         </form>
     </div>
-    <script src="/scripts.js"></script>
-
+<script src="/script_create.js"></script>
 {% endblock %}

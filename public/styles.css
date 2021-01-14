@@ -9,12 +9,12 @@
 
 html,
 body {
-  height: 1200px;
+  height: auto;
   position: relative;
 }
 /*==========PAGE INDEX==============*/
 .menu {
-  width: 1400px;
+  width: 100%;
   height: 80px;
   display: grid;
   position: relative;
@@ -219,20 +219,84 @@ body {
   margin-top: 55px;
 }
 
-.img_recipe_id {
+.highlight img {
   width: 940px;
   height: 230px;
   position: relative;
-}
-
-.img_recipe_id img {
-  width: 940px;
-  height: 230px;
-  margin: 0px 0px 50px;
   border-radius: 15px;
   object-fit: cover;
+  cursor: zoom-in;
 }
 
+ .gallery-preview {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 10px;
+  height: 100px;
+  width: 100%;
+  position: relative;
+}
+
+.gallery-preview img {
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: 600ms;
+}
+
+.gallery-preview img:hover,
+.gallery-preview img.active {
+  opacity: 1;
+}
+
+.highlight .lightbox-target {
+position: fixed;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, .7);
+top: -100%;
+left: 0;
+border-radius: 15px;
+overflow: hidden;
+z-index: 100;
+opacity: 0;
+
+transition: opacity 0,4s
+}
+
+.highlight .lightbox-target img {
+  margin: auto;
+
+  position: absolute;
+  top:0;
+
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  background-color: white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, .3);
+  object-fit: contain;
+}
+
+.highlight .lightbox-target a.lightbox-close {
+width: 50px;
+height: 50px;
+
+background: white;
+
+position: absolute;
+top: -80%;
+right: 0;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+transition: 400ms;
+}
 .title_recipe_id,
 .author_recipe_id,
 .grid_recipe_id,
@@ -323,22 +387,16 @@ h4 {
 /*================FOOTER================*/
 
 .footer {
-  width: 1400px;
-  height: 62px;
   background-color: #eeeeee;
-  bottom: 0;
-  position: absolute;
+  margin-top: auto;
+  width: 100%;
 }
 
 .footer p {
-  width: 300px;
-  height: 16px;
-  margin: 23px 566px 23px 567px;
   font-size: 14px;
-  color: #999999;
-  line-height: 16px;
-  text-align: center;
-  position: absolute;
+    color: #999999;
+    text-align: center;
+    padding: 25px 0;
 }
 
 /*=============PAGE ABOUT=============*/
@@ -427,6 +485,10 @@ h4 {
 form {
   width: 940px;
   overflow: hidden;
+}
+
+.form-newchef {
+  height: 430px;
 }
 
 #sav,
@@ -719,4 +781,48 @@ form .field.upload #photos-preview .photo img {
 
 #photos-preview .photo:hover i {
   opacity: 1;
+}
+
+form .field-upload-chef {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  width: 200px;
+}
+.field-upload-chef {
+  display: flex;
+}
+
+form .field-upload-chef #field-upload-chef-button{
+  padding: 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px -6px #333;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  width: 100px;
+  position: relative;
+
+  background: #6558c3;
+  text-align: center;
+}
+
+form .field-upload-chef #field-upload-chef-input {
+  position: relative;
+    top: -29px;
+    left: 0;
+    cursor: pointer;
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+form .field-upload-chef #photos-preview .photo img {
+  width: 100%;
+  height: 150px;
+
+  object-fit: cover;
 }

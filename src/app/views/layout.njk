@@ -4,31 +4,21 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="/styles.css"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Foodfy</title>
   </head>
 
   <body>
     <div class="menu">
       <div class="img_logo">
-        <img src="/logo2.png"/>
+        <a href="/"><img src="/logo2.png"></a>
       </div>
-      <div class="menu_links">
-        <header>
-          <a href="/">HOME</a>
-          <a href="/admin/recipes/recipes">RECEITAS</a>
-          <a href="/admin/chefs/chefs">CHEFS</a>
-          <a href="/views/about">SOBRE</a>
-        </header>
-      </div>
+      {% include "parts/header.njk" %}
     </div>
 
     {% block content %}{% endblock %}
 
+    {% include "parts/footer.njk" %}
 
-    <div class="footer">
-      <p>Todos os direitos reservados, receitas Foodfy</p>
-    </div>
   </body>
 </html>

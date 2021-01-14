@@ -9,26 +9,53 @@
       <label class="subtitles_recipe_id">Receita: {{recipe.title}}</label>
   </div>
   <div style="float:right;">
-      <a href="/admin/recipes/recipes/{{recipe.id}}/edit"><button id="edt" type="submit">Editar receita</button></a>
+      <a href="/recipes/{{recipe.id}}/edit"><button id="edt" type="submit">Editar receita</button></a>
   </div>  
     </div>
-
-    <div class="img_recipe_id">
-     
-      {% if not recipeFiles[0] %}
+      <div class="highlight">
+        {% if not dataFile[0].src %}
       <img src="http://placehold.it/500x500?text=PRODUTO SEM FOTO" alt=""/>
       {% else %}
-      <img src="{{recipeFiles[0].src}}" alt="{{recipeFiles[0].name}}">
+      <img 
+      src="{{dataFile[0].src}}" 
+      alt="{{dataFile[0].filename}}"
+      onclick="Lightbox.open()"
+      >
       {% endif %}
-      
+    <div class="lightbox-target">
+      <img src="{{dataFile[0].src}}" alt="{{dataFile[0].name}}">
+    <a 
+    href="#" 
+    class="lightbox-close"
+    onclick="Lightbox.close()"
+    >
+      <i class="material-icons">
+        close
+      </i>
+    </a>
     </div>
+      </div>
+      <div class="gallery-preview">
+        {% for image in dataFile %}
+        <img 
+        src="{{image.src}}" 
+        alt="{{image.filename}}"
+        {% if loop.index0 == 0 %}
+        class="active"
+        {% endif %}
+        onclick="ImageGallery.setImage(event)"
+        >
+        {% endfor %}
+
+      </div>
+    
 
     <div class="title_recipe_id">
       <p>{{recipe.title}}</p>
     </div>
 
     <div class="author_recipe_id">
-      <p>{{recipe.author}}</p>
+      <p>por {{recipe.author}}</p>
     </div>
 
     <div class="topic-ingredients">
@@ -84,6 +111,7 @@
 
   </section>
 </div>
-  <script src="/scripts.js"></script>
+
+<script src="/script_show.js"></script>
 
 {% endblock %}

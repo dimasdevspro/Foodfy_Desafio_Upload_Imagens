@@ -2,15 +2,15 @@ const db = require('../../config/db')
 const { date } = require('../../lib/utils')
 
 module.exports = {
-    all(callback) {
-      return db.query(`
-        SELECT chefs.*, count(recipes) AS total_recipes
-        FROM chefs
-        LEFT JOIN recipes ON (recipes.chef_id = chefs.id)
-        GROUP BY chefs.id
-        ORDER BY total_recipes ASC`)
+    all() {
+      return db.query(`SELECT *
+      FROM chefs t1
+      FULL OUTER JOIN files t2
+      ON t1.file_id = t2.id
+      WHERE file_id IS NOT NULL
+      ORDER BY t1.name`)
     },
-    create(data, callback) {
+    create(data) {
 
         const keys = Object.keys(data)
 
@@ -21,33 +21,26 @@ module.exports = {
     const query = `
         INSERT INTO chefs (
             name,
-            avatar_url,
-            created_at
+            created_at,
+            file_id
         ) VALUES ( $1, $2, $3)
         RETURNING id
     `
     const values = [
         data.name,
-        data.avatar_url,
-        date(Date.now()).iso
+        date(Date.now()).iso,
+        data.photo
     ]
 
-    db.query(query, values, function(err, results){
-        if(err) throw `Database Error! ${err}`
-
-         callback(results.rows[0])
-        })
+    return db.query(query, values)
     },
-    find(id, callback) {
-        db.query(`
+    find(id) {
+        return db.query(`
         SELECT chefs.*, count(recipes) AS total_recipes
         FROM chefs
         LEFT JOIN recipes ON (recipes.chef_id = chefs.id)
         WHERE chefs.id = $1
-        GROUP BY chefs.id`, [id], function(err, results){
-            if(err)  throw `Database Error! ${err}`
-            callback(results.rows[0])
-        })
+        GROUP BY chefs.id`, [id])
     },
     findBy(filter, callback) {
         db.query(`
@@ -62,16 +55,13 @@ module.exports = {
             callback(results.rows)
         })       
     },
-    findRecipes(id, callback){
-        db.query(`
-        SELECT recipes.id, recipes.image, recipes.title, chefs.name AS author
+    findRecipes(id){
+        return db.query(`
+        SELECT recipes.*, chefs.name AS author
         FROM chefs
         LEFT JOIN recipes ON (recipes.chef_id = chefs.id)
         WHERE chefs.id = $1
-        `, [id], function(err,results){
-            if(err) throw `Database Error! ${err}`
-            callback(results.rows)
-        })
+        `, [id])
     },
     update(data, callback) {
         const query = `
@@ -129,9 +119,12 @@ module.exports = {
         }
 
         query =`
-        SELECT chefs.*, ${totalQuery} 
+        SELECT chefs.id AS chef_id, chefs.name, chefs.created_at, chefs.file_id AS chefs_file_id,
+        files.id AS file_id, files.filename, files.path, ${totalQuery} 
         FROM chefs
         ${filterQuery}
+        LEFT JOIN files ON (chefs.file_id = files.id)
+        WHERE file_id IS NOT NULL
         LIMIT $1 OFFSET $2
         `
 

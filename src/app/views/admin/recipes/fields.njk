@@ -15,17 +15,18 @@
         </div>
     </div>
     <div id="photos-preview">
-        {% if recipeFiles %}
-            {% for image in recipeFiles%}
-                <div class="photo" id="{{image.id}}">
-                    <img src="{{image.src}}" alt="{{image.name}}">
+       
+                {% for files in dataFile%}
+                <div class="photo" id="{{files.file_id}}">
+                    <img src="{{files.src}}" alt="{{files.filename}}">
                     <i class="material-icons" onclick="PhotosUpload.removeOldPhoto(event)">
                         close
                     </i>
                 </div>
-            {% endfor %}
-            <input type="hidden" name="removed_files">
-        {% endif %}
+          
+                    <input type="hidden" name="removed_files">
+                {% endfor %}
+    
     </div>
 </div>
 
@@ -43,7 +44,7 @@
     <select name="chef">
         {% for chefs in chefOptions %}
 
-            <option value="{{chefs.id}}" {% if recipe.chef_id == chefs.id %} selected="selected" {% endif %}>
+            <option value="{{chefs.id}}" {% if recipe.author == chefs.name %} selected="selected" {% endif %}>
                 {{chefs.name}}
 
             </option>
@@ -79,3 +80,5 @@
     </label>
     <textarea type="text" name="informations" id="info">{{recipe.informations}}</textarea>
 </div>
+
+<script src="/script_create.js"></script>

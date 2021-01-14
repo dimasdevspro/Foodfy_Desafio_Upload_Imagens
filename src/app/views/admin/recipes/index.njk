@@ -5,7 +5,7 @@
   <div id="admin-recipe-title">
     <p>Gerenciar Receitas</p>
   <div class="header">
-    <a id="button-create" href="/admin/recipes/recipes/create">Cadastrar</a>
+    <a id="button-create" href="/recipes/create">Cadastrar</a>
       <form action="/admin/recipes/recipes" method="GET">
         <input 
         type="text" 
@@ -19,11 +19,11 @@
 
   <section class="cards_recipes">
 
-    {% for recipe in recipes %}
+    {% for recipe in arrayRecipes %}
 
       <section class="card_link1">
         <div class="img_recipe">
-          <img src="{{recipe.image}}" alt=""/>
+          <img src="{{recipe.src}}" alt="{{recipe.filename}}"/>
         </div>
       </section>
       <section class="card_link2">
@@ -33,7 +33,7 @@
         <div class="author_recipe">
           <p>por {{recipe.author}}</p>
         </div>
-        <a href="/admin/recipes/recipes/{{recipe.recipe_id}}" class="link-view">Visualizar</a>
+        <a href="/recipes/{{recipe.id}}" class="link-view">Visualizar</a>
       </section>
     {% endfor %}
 
@@ -44,5 +44,5 @@
   data-total={{pagination.total}}
   data-filter={{filter}}
   ></div>
-  <script src="/scripts.js"></script>
+<script src="/scripts.js"></script>
 {% endblock %}

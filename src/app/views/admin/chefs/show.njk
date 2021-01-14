@@ -7,10 +7,10 @@
         <p>Chef: {{chef.name}}</p>
       </div>
       <div class="img_chef_id">
-        <img src="{{chef.avatar_url}}" alt=""/>
+        <img src="{{dataFile[0].src}}" alt=""/>
       </div>
       <div class="edt">
-        <a id="edt" href="/admin/chefs/chefs/{{chef.id}}/edit">
+        <a id="edt" href="/chefs/{{chef.id}}/edit">
           Editar Chef
         </a>
       </div>
@@ -18,8 +18,15 @@
         <p>{{chef.name}}</p>
       </div>
       <div class="total_recipes_chef_id">
-      <p>{{chef.total_recipes}}
-        receitas</p>
+      <p>
+     {% if chef.total_recipes <= '1' %}
+     {{chef.total_recipes}}
+      receita
+    {% else %}
+    {{chef.total_recipes}}
+     receitas
+    {%endif%}
+      </p>
     </div>
     </div>
     
@@ -42,7 +49,7 @@
         <p>por
           {{recipe.author}}</p>
       </div>
-      <a href="/admin/recipes/recipes/{{recipe.id}}" class="link-view">Visualizar</a>
+      <a href="/recipes/{{recipe.id}}" class="link-view">Visualizar</a>
     </section>
   {% endfor %}
   {% endif %}

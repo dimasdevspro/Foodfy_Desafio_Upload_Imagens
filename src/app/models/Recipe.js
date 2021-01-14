@@ -3,9 +3,20 @@ const { date } = require('../../lib/utils')
 
 module.exports = {
     all() {
-       return db.query(`SELECT * 
-        FROM recipes
-        ORDER BY title ASC`)
+       try{
+        return db.query(`SELECT * 
+       FROM recipes_files t1
+       FULL OUTER JOIN files t2
+       ON t1.files_id = t2.id 
+       FULL OUTER JOIN recipes t3
+       ON t1.recipes_id = t3.id
+       FULL OUTER JOIN chefs t4
+       ON t3.chef_id = t4.id
+       WHERE recipes_id IS NOT NULL
+       ORDER BY t3.title`)
+       }catch(err){
+           throw new Error(err);
+       }
 
     },
     create(data) {
@@ -29,8 +40,8 @@ module.exports = {
     `
     const values = [
         data.title,
-        `{${data.ingredients}}`,
-        `{${data.preparations}}`,
+        `${data.ingredients}`,
+        `${data.preparations}`,
         data.informations,
         date(Date.now()).iso,
         data.chef,
@@ -40,8 +51,8 @@ module.exports = {
     },
     find(id) {
         return db.query(`
-        SELECT recipes.*, chefs.name AS author 
-        FROM recipes 
+        SELECT recipes.*, chefs.name AS author
+        FROM recipes
         LEFT JOIN chefs ON (chefs.id = recipes.chef_id)
         WHERE recipes.id = $1`, [id])
     },
@@ -49,8 +60,8 @@ module.exports = {
         const query = `
         UPDATE recipes SET
         title=($1),
-        ingredients=($2),
-        preparations=($3),
+        ingredients=ARRAY[($2)],
+        preparations=ARRAY[($3)],
         informations=($4),
         chef_id=($5)
         WHERE id= $6
@@ -58,18 +69,15 @@ module.exports = {
 
         const values = [
             data.title,
-        `{${data.ingredients}}`,
-        `{${data.preparations}}`,
+            `${data.ingredients}`,
+            `${data.preparations}`,
             data.informations,
             data.chef,
             data.id
         ]
-
+       
         return db.query(query, values)
         // console.log(db.query(query, values))
-    },
-    delete(id) {
-        return db.query(`DELETE FROM recipes WHERE id = $1`, [id])
     },
     chefsSelectOptions() {
          return db.query(`
@@ -77,7 +85,7 @@ module.exports = {
          )
     },
     paginate(params) {
-        const { filter, limit, offset } = params
+        const { filter, limit, offset, callback } = params
 
         let query = "",
         filterQuery = "",
@@ -86,7 +94,7 @@ module.exports = {
         ) AS total`
 
 
-        if (filter ){
+        if (filter){
 
             filterQuery = `
             WHERE recipes.title ILIKE '%${filter}%'
@@ -105,12 +113,16 @@ module.exports = {
         ${filterQuery}
         LEFT JOIN chefs ON (chefs.id = recipes.chef_id)
         ORDER BY recipes.title
+        
         LIMIT $1 OFFSET $2
         `
 
-        return db.query(query, [limit, offset])
-        // console.log(db.query(query, [limit, offset]))
-    },
+        db.query(query, [limit, offset], function(err, results){
+            if (err) throw `Database Error! ${err}` 
+            callback(results.rows)
+        })
+       
+       },
     files(id){
         return db.query(`
         SELECT * FROM files WHERE id = $1
@@ -121,5 +133,8 @@ module.exports = {
         SELECT * FROM files 
         ORDER BY id ASC
         `)
+    },
+    delete(id) {
+        return db.query(`DELETE FROM recipes WHERE id = $1`, [id])
     }
 }
