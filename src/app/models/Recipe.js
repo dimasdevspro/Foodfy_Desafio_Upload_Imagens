@@ -108,18 +108,23 @@ module.exports = {
         }
 
         query =`
-        SELECT recipes.title, recipes.id AS recipe_id, chefs.name AS author, ${totalQuery} 
-        FROM recipes
-        ${filterQuery}
-        LEFT JOIN chefs ON (chefs.id = recipes.chef_id)
-        ORDER BY recipes.title
-        
-        LIMIT $1 OFFSET $2
+       SELECT *, ${totalQuery}
+       FROM recipes_files t1
+       ${filterQuery}
+       FULL OUTER JOIN files t2
+       ON t1.files_id = t2.id 
+       FULL OUTER JOIN recipes t3
+       ON t1.recipes_id = t3.id
+       FULL OUTER JOIN chefs t4
+       ON t3.chef_id = t4.id
+       WHERE recipes_id IS NOT NULL
+       ORDER BY t3.title
+       LIMIT $1 OFFSET $2
         `
 
-        db.query(query, [limit, offset], function(err, results){
+       return db.query(query, [limit, offset], function(err, results){
             if (err) throw `Database Error! ${err}` 
-            callback(results.rows)
+           callback(results.rows)
         })
        
        },

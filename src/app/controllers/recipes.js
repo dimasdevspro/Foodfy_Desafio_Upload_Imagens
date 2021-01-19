@@ -37,44 +37,13 @@ module.exports = {
     return res.render("about");
   },
   async index(req, res) {
-    // //  buscando todos os dados concatenados das receitas
-    // let results = await Recipe.all();
-    // // criando espaço para gravar os dados em um Array
-    // let arrayRecipes = [];
-    // //Definindo parâmetros para paginação
-    
-    // // criando o colocador de objetos em um Array e renderizando a página com o objeto
-    // let dataRecipes = {
-    //   creatorData: function (data) {
-    //     let arrayDataRecipes = {};
-    //     for (i = 0; data.length > i; i++) {
-    //       arrayDataRecipes = {
-    //         id: data[i].recipes_id,
-    //         filename: data[i].filename,
-    //         src: `${req.protocol}://${req.headers.host}${data[i].path.replace(
-    //           "public",
-    //           ""
-    //         )}`,
-    //         title: data[i].title,
-    //         author: data[i].name,
-    //       };
 
-    //       arrayRecipes.push(arrayDataRecipes);
-    //     }
-    //     res.render('admin/recipes/index',{arrayRecipes} )
-    //   }
-    // }
-    // // o que vai dentro da matriz "arrayRecipes"? O resultado da busca de receitas por linha
-
-    // dataRecipes.creatorData(results.rows);
-    
     let { filter, page, limit } = req.query
 
     page = page || 1
     limit = limit || 6
     let offset = limit * (page - 1)
-    filter = ''
-
+    filter = filter || ''
 
     const params = {
       filter,
@@ -82,16 +51,17 @@ module.exports = {
       limit, 
       offset,
       callback: function(recipes) {
-
         const pagination = {
           total: Math.ceil(recipes[0].total / limit),
           page,
         }
           for (i = 0; recipes.length > i; i++) {
-            recipes[i].path = `${req.protocol}://${req.headers.host}${recipes[i].path.replace("public", "")}`
+            recipes[i].path = `${req.protocol}://${req.headers.host}${recipes[i].path.replace("public", "")}`,
+            recipes[i].author = recipes[i].name
           }
-          console.log(recipes)
-        // return res.render("admin/chefs/index", { recipes, pagination, filter})
+         
+         console.log(recipes)
+        return res.render("admin/recipes/index", {recipes, pagination, filter})
         }  
       }
     await Recipe.paginate(params)
@@ -199,7 +169,7 @@ module.exports = {
           ""
         )}`,
       }));
-      console.log(dataFile);
+      // console.log(dataFile);
       //renderizando a página e enviando os objetos para edição
       return res.render(`admin/recipes/edit`, {
         recipe,

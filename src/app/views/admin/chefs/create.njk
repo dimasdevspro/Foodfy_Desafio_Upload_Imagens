@@ -2,53 +2,7 @@
 
 {% block content %}
     <div class="comum_div">
-        <form class="form-newchef" method="post" action="/chefs" enctype="multipart/form-data">
-            <div class="adm-chef">
-
-                <div style="float:left">
-                    <label >Criando Chef</label>
-                </div>
-                <div style="float:right">
-                    <button id="sav" type="submit">Salvar chef</button>
-                </div>
-            </div>
-
-            <div class="field">
-                <label for="">
-                    Nome
-                </label>
-                <input type="text" name="name" id="nam">
-            </div>
-
-            <div class="field">
-                <label for="">
-                    Avatar
-                </label>
-            </div>
-            <div class="field-upload-chef">
-                    <div id="field-upload-chef-button">
-                            <img src="" alt="">
-                            <p>Enviar Avatar</p>
-                        </div>
-                    <div id="field-upload-chef-input">
-                         <input  type="file" name="photo" multiple="multiple" accept="image/*" onchange="PhotosUpload.handleFileInput(event)">
-                    </div>
-                <div id="photos-preview">
-
-                    {% for files in dataFile %}
-                        <div class="photo" id="{{files.file_id}}">
-                            <img src="{{files.src}}" alt="{{files.filename}}">
-                            <i class="material-icons" onclick="PhotosUpload.removeOldPhoto(event)">
-                                close
-                            </i>
-                        </div>
-
-                        <input type="hidden" name="removed_files">
-                    {% endfor %}
-
-                </div>
-            </div>
-        </form>
+        {% include "admin/chefs/fields.njk"%}
     </div>
     <script src="/script_create.js"></script>
 

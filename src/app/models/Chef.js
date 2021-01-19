@@ -12,24 +12,18 @@ module.exports = {
     },
     create(data) {
 
-        const keys = Object.keys(data)
-
-        for(key of keys) {
-            if(data[key] == "")
-            return res.alert('Please, fill all fields')
-        }
     const query = `
         INSERT INTO chefs (
             name,
-            created_at,
-            file_id
+            file_id,
+            created_at
         ) VALUES ( $1, $2, $3)
         RETURNING id
     `
     const values = [
         data.name,
-        date(Date.now()).iso,
-        data.photo
+        data.file_id,
+        date(Date.now()).iso
     ]
 
     return db.query(query, values)
@@ -63,30 +57,26 @@ module.exports = {
         WHERE chefs.id = $1
         `, [id])
     },
-    update(data, callback) {
+    update(data) {
         const query = `
         UPDATE chefs SET
         name=($1),
-        avatar_url=($2)
+        file_id=($2)
     WHERE id= $3
         `
         const values = [
             data.name,
-            data.avatar_url,
+            data.file_id,
             data.id
         ]
 
-        db.query(query, values, function(err, results){
-            if(err)  throw `Database Error! ${err}`
-
-            callback()
+        return db.query(query, values, function(err){
+            if (err) throw `Database error ${err}`
         })
     },
-    delete(id, callback) {
-        db.query(`DELETE FROM chefs WHERE id = $1`, [id], function(err, results){
+    delete(id) {
+        return db.query(`DELETE FROM chefs WHERE id = $1`, [id], function(err){
             if(err)  throw `Database Error! ${err}`
-
-            return callback()
         })
     },
     chefsSelectOptions(callback) {

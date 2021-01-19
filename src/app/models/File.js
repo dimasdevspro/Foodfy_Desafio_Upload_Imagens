@@ -2,7 +2,7 @@ const db = require('../../config/db')
 const fs = require('fs')
 
 module.exports = {
-    create({filename, path}) {
+    create(data) {
 
         const query = `
         INSERT INTO files (
@@ -12,11 +12,11 @@ module.exports = {
         RETURNING id
         `
         const values = [
-            filename,
-            path
+            data.filename,
+            data.path
                 ]
+                console.log(values)
         return db.query(query, values)
-        // console.log(query, values)
     },
     find(id) {
         try {
@@ -34,6 +34,17 @@ module.exports = {
             FROM files 
             LEFT JOIN chefs ON (chefs.file_id = files.id )
             WHERE chefs.id = $1`, [id])
+        }catch(err){
+            throw new Error(err)
+        }
+        
+    },
+    find3(id){
+        try{
+            return db.query(`SELECT files.id AS file_id, files.filename, files.path
+            FROM files 
+            LEFT JOIN chefs ON (chefs.file_id = files.id )
+            WHERE files.id = $1`, [id])
         }catch(err){
             throw new Error(err)
         }
