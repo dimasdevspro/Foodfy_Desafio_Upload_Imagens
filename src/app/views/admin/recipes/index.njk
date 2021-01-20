@@ -6,7 +6,7 @@
     <p>Gerenciar Receitas</p>
   <div class="header">
     <a id="button-create" href="/recipes/create">Cadastrar</a>
-      <form action="/admin/recipes/recipes" method="GET">
+      <form action="/recipes" method="GET">
         <input 
         type="text" 
         name="filter" 
@@ -44,5 +44,5 @@
   data-total={{pagination.total}}
   data-filter={{filter}}
   ></div>
-<script src="/scripts.js"></script>
+
 {% endblock %}

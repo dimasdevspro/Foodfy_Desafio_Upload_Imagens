@@ -8,7 +8,7 @@ module.exports = {
     page = page || 1
     limit = limit || 6
     let offset = limit * (page - 1)
-    filter = filter || ''
+    filter
     //definindo os requisitos de busca no bd e retornando a renderização
     const params = {
       filter,
@@ -24,7 +24,7 @@ module.exports = {
           for (i = 0; chefs.length > i; i++) {
             chefs[i].path = `${req.protocol}://${req.headers.host}${chefs[i].path.replace("public", "")}`
           }
-          console.log({chefs, pagination, filter})
+       
         return res.render("admin/chefs/index", { chefs, pagination, filter})
         }  
       }
@@ -119,6 +119,7 @@ module.exports = {
          ""
        )}`,
      }));
+
     //  renderizando a página e enviando os objetos para edição
      return res.render(`admin/chefs/edit`, {
        chef,
@@ -190,6 +191,7 @@ module.exports = {
   async delete(req, res) {
     
     await Chef.delete(req.body.id)
+    await File.delete(req.body.file_id)
 
     return res.redirect('/chefs')
   },

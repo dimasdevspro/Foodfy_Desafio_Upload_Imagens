@@ -6,7 +6,7 @@
     <p>Gerenciar Chefs</p>
     <div class="header">
       <a id="button-create" href="/chefs/create">Cadastrar</a>
-      <form action="/chefs/create" method="GET">
+      <form action="/chefs" method="GET">
         <input 
         type="text" 
         name="filter" 
@@ -35,5 +35,5 @@
   data-total={{pagination.total}}
   data-filter={{filter}}
   ></div>
-  <script src="/scripts.js"></script>
+
 {% endblock %}

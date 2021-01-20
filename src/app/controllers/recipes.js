@@ -37,7 +37,7 @@ module.exports = {
     return res.render("about");
   },
   async index(req, res) {
-
+   
     let { filter, page, limit } = req.query
 
     page = page || 1
@@ -45,12 +45,14 @@ module.exports = {
     let offset = limit * (page - 1)
     filter = filter || ''
 
+    
     const params = {
       filter,
       page,
       limit, 
       offset,
       callback: function(recipes) {
+    
         const pagination = {
           total: Math.ceil(recipes[0].total / limit),
           page,
@@ -59,13 +61,12 @@ module.exports = {
             recipes[i].path = `${req.protocol}://${req.headers.host}${recipes[i].path.replace("public", "")}`,
             recipes[i].author = recipes[i].name
           }
-         
-         console.log(recipes)
-        return res.render("admin/recipes/index", {recipes, pagination, filter})
-        }  
+          return res.render("admin/recipes/index", {recipes, pagination, filter})
+      }  
+
       }
     await Recipe.paginate(params)
-  
+    
   },
   create(req, res) {
     Recipe.chefsSelectOptions()
@@ -239,6 +240,6 @@ module.exports = {
     await File.delete(recipeId.files_id);
     await Recipe.delete(recipeId.recipe_id);
 
-    res.redirect(`/recipes/${recipeId.recipe_id - 1}`);
+    res.redirect(`/recipes`);
   },
 };

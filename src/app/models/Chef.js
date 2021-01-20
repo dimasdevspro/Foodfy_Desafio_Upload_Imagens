@@ -112,9 +112,8 @@ module.exports = {
         SELECT chefs.id AS chef_id, chefs.name, chefs.created_at, chefs.file_id AS chefs_file_id,
         files.id AS file_id, files.filename, files.path, ${totalQuery} 
         FROM chefs
-        ${filterQuery}
         LEFT JOIN files ON (chefs.file_id = files.id)
-        WHERE file_id IS NOT NULL
+        ${filterQuery}
         LIMIT $1 OFFSET $2
         `
 

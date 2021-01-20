@@ -1,16 +1,5 @@
 
 {% block content %}
-   <form class="form-newchef" method="post" action="/chefs?_method=PUT" enctype="multipart/form-data">
-            <div class="adm-chef">
-
-                <div style="float:left">
-                    <label >Editando Chef</label>
-                </div>
-                <div style="float:right">
-                    <button id="sav" type="submit">Salvar chef</button>
-                </div>
-            </div>
-
             <div class="field">
                 <label for="">
                     Nome
@@ -41,7 +30,4 @@
                         
                 </div>
             </div>
-            <input type="hidden" name="id" value="{{chef.id}}">
-            <input type="hidden" name="file_id" value="{{dataFile[0].file_id}}">
-        </form>
 {% endblock %}
