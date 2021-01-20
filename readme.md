@@ -34,7 +34,7 @@
 [↩](#indice)
 
 <h4> 	
-👌 Em andamento 👌
+Concluído
 </h4>
 
 ### Histórico do Projeto 
@@ -64,7 +64,9 @@
 ### Demonstração da Aplicação 
 [↩](#indice)
 
-<h1 align="center"><img src="Sem Imagem" height="350" weigth="350"></h1>
+<h1 align="center"><img src="screenshots/Foodfy_Upload_Imagens.png" height="350" weigth="350"></h1>
+<h1 align="center"><img src="screenshots/Codigo_req_db.png" height="350" weigth="350"></h1>
+<h1 align="center"><img src="screenshots/DB_Foodfy.gif" height="350" weigth="350"></h1>
 
 
 
